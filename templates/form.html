@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>form表单</title>
+    <style>
+        /* body样式 */
+        body {
+            color: aliceblue;
+            background-color: whitesmoke;
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* 表单整体样式 */
+        .form-container {
+            display: flex;
+            gap: 50px; /* 表单之间的间距 */
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8%;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 阴影 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            color: #353030;
+        }
+
+        /* 输入框样式 */
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 按钮样式 */
+        input[type="submit"], input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: palevioletred;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #e51c1c;
+        }
+
+        /* 验证码输入框和按钮样式 */
+        .code-container {
+            display: flex;
+            gap: 10px; /* 输入框和按钮之间的间距 */
+        }
+
+        .code-container input[type="text"] {
+            flex: 1;
+        }
+
+        .code-container input[type="button"] {
+            flex-shrink: 0;
+            width: auto;
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="container">
+            <h3>登录</h3>
+        <form method="post">
+            <!-- 插入CSRF所需的隐藏字段 -->
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.name.label }}<br>  <!-- 表单标签 -->
+                {{ form.name(size=32) }}
+                {{ form.password.label }}<br>
+                {{ form.password(size=32) }}
+                {{ form.submit() }}
+                <input type="button" value="注册" onclick="alert('注册界面')">
+            </div>
+        </form>
+        </div>
+    </div>
+</body>
+</html>

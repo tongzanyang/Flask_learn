@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="71c0be86-62c9-4d25-b0a4-a2fbb8c5e989" name="tzy云服务">
+        <fileTransfer accessType="SFTP" host="122.51.217.188" port="22" sshConfigId="b1ca0b32-32de-4848-9d23-29e641104bfe" sshConfig="root@122.51.217.188:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="1e78b741-6503-4907-88cf-02baaa4aa0e2" name="2005">
+        <fileTransfer accessType="SFTP" host="122.51.217.188" port="22" sshConfigId="b1ca0b32-32de-4848-9d23-29e641104bfe" sshConfig="root@122.51.217.188:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

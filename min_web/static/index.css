@@ -1,0 +1,108 @@
+@charset "utf-8";
+/* CSS Document */
+
+.a { background-color: #00FFFF; }
+.a1 { background-color: #33CCFF; width: 780px; height: 850px; margin: auto; border-style: solid; border-right-width: 10px; border-color: #0099FF; }
+.a2 { background-color: #CCFFFF; width: 777px; height: 190px; float: left; border-style: solid; border-right-width: 10px; border-color: #0099FF; }
+.a3 { background-color: #FFFFFF; width: 191px; height: 600px; float: left; border-style: solid; border-color: #0099FF; border-width: 2px; }
+.a4 { background-color: #CC66CC; width: 390px; height: 600px; float: left; }
+.a5 { background-color: #33CCFF; width: 171px; height: 111px; float: left; margin-top: 5px; margin-left: 5px; }
+
+.a6 {
+	background-color: #CCFFFF;
+	width: 171px;
+	height: 20px;
+	float:left;
+	font-family: "宋体";
+	font-weight: bolder;
+	font-size: 12px;
+	margin-left: 5px;
+	margin-top: 8px;
+}
+.a7 {
+	background-color: #33CCFF;
+	width: 171px;
+	height: 20px;
+	float:left;
+	font-family: "宋体";
+	font-size: 12px;
+	margin-left: 5px;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.a2 ul {
+	background-color: #0000FF;
+	height: 50;
+	width: 780;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.a2 ul li {
+	font-family: "宋体";
+	font-size: 14px;
+	height: 40px;
+	width: 70px;
+	color: #0000FF;
+	text-align: center;
+	float: left;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	list-style-type: none;
+}
+
+#a1 {background-color: #FFFFFF; width: 390px; height: 265px; float: left; }
+.a8 {background-color: #FFFFFF; width: 390px; height: 50px; float: left; }
+#a3 {background-color: #FFFFFF; width: 390px; height: 123px; float: left; }
+.a9 {background-color: #FFFFFF; width: 83px; height: 123px; float: left; margin-left: 10px; }
+#a4 {background-color: #FFFFFF; width: 390px; height: 112px; float: left; }
+
+#a4 ul {
+    float: left;
+    width: 390px;
+	height: 112;
+    overflow: auto;
+    padding:0;
+    white-space: nowrap;
+}
+
+#a4 ul li {
+	font-family: "宋体";
+	font-size: 10px;
+	height: 28;
+	width: 375px;
+	color: #3399FF;
+	margin-left: 15px;
+	text-align: left;
+}
+
+#a5 {background-color: #33CCFF; width: 175px; height: 235px; float: left; margin-top: 10px; margin-left: 5px; }
+.a10 {background-color: #33CCFF; width: 150px; height: 100px; margin-top: 5px; margin-left: 10px; margin-right: 12px; float: left; }
+#a6 {background-color: #33CCFF; width: 175px; height: 100px; float: left; margin-top: 5px; margin-left: 5px; }
+
+#a6 ul li {
+	font-family: "宋体";
+	font-size: 13px;
+	color: #FFFFFF;
+	height: 16px;
+	width: 120px;
+	float: left;
+	border-bottom-style: dotted;
+}
+
+#a7 {background-color: #33CCFF; width: 175px; height: 160px; float: left; margin-top: 5px; margin-left: 5px; }
+
+#a7 ul li {
+	font-family: "宋体";
+	font-size: 13px;
+	color: #FFFFFF;
+	height: 16px;
+	width: 120px;
+	float: left;
+	border-bottom-style: dotted;
+}
+
+#a8 { background-color: #FFFFFF; width: 175px; height: 111px; float: left; margin-top: 5px; margin-left: 5px; }
+#a9 { background-color: #33CCFF; width: 171px; height: 71px; float: left; }

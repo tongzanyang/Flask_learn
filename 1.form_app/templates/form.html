@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Example</title>
+</head>
+<body>
+    <form method="post">
+        <!-- 插入CSRF所需的隐藏字段 -->
+        {{ form.hidden_tag() }}
+        <div>
+            <!-- 定义表单标签和字符大小 -->
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}
+        </div>
+        <div>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+        </div>
+        <div>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    <br>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <label for="file">文件：</label>
+        <input type="file" id="file"  name="file">
+        <br>
+        <input type="submit" value="上传文件">
+    </form>
+</body>
+</html>

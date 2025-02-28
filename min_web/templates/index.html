@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<!-- 加载静态文件 -->
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="x-ico" />
+<!-- 连接 CSS 文件 -->
+<link href="{{ url_for('static', filename='index.css') }}" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <!-- 网页背景 -->
+    <div class="a">
+        <!-- 外部框架背景 -->
+        <div class="a1">
+            <!-- 内部框架背景 -->
+            <div class="a2">
+                <!-- 主页导航 -->
+                <img src="{{ url_for('static', filename='images/banner.jpg') }}" />
+                <ul>
+                    {% set nav_links = [
+                        ('http://127.0.0.1:7001', '首页'),
+                        ('http://127.0.0.1:7001', '新疆简历'),
+                        ('http://localhost:7001/test.html', '新疆美食'),
+                        ('http://www.baidu.com', '新疆景点'),
+                        ('http://www.baidu.com', '新疆风俗'),
+                        ('http://www.baidu.com', '新疆人物'),
+                        ('http://www.baidu.com', '新疆购物'),
+                        ('http://www.baidu.com', '新疆语言'),
+                        ('http://www.baidu.com', '新疆文化'),
+                        ('https://ico.nyaasu.top/', 'ico图标转换器')
+                    ] %}
+                    {% for link, text in nav_links %}
+                        <li><a href="{{ link }}">{{ text }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="a3">
+                <div id="a8">
+                    <img src="{{ url_for('static', filename='images/weather.jpg') }}" width="175px" height="40px">
+                    <div id="a9"></div>
+                </div>
+                <div class="a6"><img src="{{ url_for('static', filename='images/icon2.gif') }}" style="margin-right: 5px">今日推荐</div>
+                {% set today_recommendations = [
+                    ('images/tuijian1.jpg', '喀纳斯河'),
+                    ('images/tuijian2.jpg', '布尔津'),
+                    ('images/tuijian3.jpg', '天山之路')
+                ] %}
+                {% for img_path, name in today_recommendations %}
+                    <div class="a5"><img src="{{ url_for('static', filename=img_path) }}"></div>
+                    <div class="a7">{{ name }}</div>
+                {% endfor %}
+            </div>
+            <div class="a4">
+                <div id="a1"><img src="{{ url_for('static', filename='images/ghost.jpg') }}" style="margin-top: 5px"></div>
+                <div class="a8"><img src="{{ url_for('static', filename='images/picture_h1.gif') }}"></div>
+                <div id="a3">
+                    {% set beauty_images = [
+                        'images/beauty1.jpg',
+                        'images/beauty2.jpg',
+                        'images/beauty3.jpg',
+                        'images/beauty4.jpg'
+                    ] %}
+                    {% for img_path in beauty_images %}
+                        <div class="a9"><img src="{{ url_for('static', filename=img_path) }}"></div>
+                    {% endfor %}
+                </div>
+                <div class="a8"><img src="{{ url_for('static', filename='images/route_h1.gif') }}"></div>
+                <div id="a4">
+                    <ul style="list-style: none">
+                        {% set travel_routes = [
+                            '吐鲁番——库尔勒——库车——和田——喀什',
+                            '乌鲁木齐——天池——克拉马依——乌伦古湖——喀纳斯',
+                            '乌鲁木齐——奎屯——乔尔玛——那拉提——巴音布鲁克',
+                            '乌鲁木齐——五彩城——将军隔壁——吉木萨尔'
+                        ] %}
+                        {% for route in travel_routes %}
+                            <li><img src="{{ url_for('static', filename='images/icon1.gif') }}" style="margin-right: 10px">{{ route }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="a3">
+                <div class="a6"><img src="{{ url_for('static', filename='images/icon1.gif') }}" style="margin-right: 5px">新闻风光</div>
+                <div id="a5">
+                    {% set news_images = [
+                        'images/map1.jpg',
+                        'images/map2.jpg'
+                    ] %}
+                    {% for img_path in news_images %}
+                        <div class="a10"><img src="{{ url_for('static', filename=img_path) }}"></div>
+                    {% endfor %}
+                </div>
+                <div class="a6"><img src="{{ url_for('static', filename='images/icon2.gif') }}" style="margin-right: 5px">小吃推荐</div>
+                <div id="a6">
+                    <ul>
+                        {% set snack_recommendations = [
+                            '17号抓饭',
+                            '大盘鸡',
+                            '五一夜市',
+                            '水果'
+                        ] %}
+                        {% for snack in snack_recommendations %}
+                            <li>{{ snack }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="a6"><img src="{{ url_for('static', filename='images/icon2.gif') }}" style="margin-right: 5px">宾馆酒店</div>
+                <div id="a7">
+                    <ul>
+                        {% set hotels = [
+                            '美丽华大饭店',
+                            '海德大饭店',
+                            '银都大饭店',
+                            '鸿福大饭店',
+                            '友好大酒店',
+                            '棉麻宾馆',
+                            '电信宾馆'
+                        ] %}
+                        {% for hotel in hotels %}
+                            <li>{{ hotel }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
