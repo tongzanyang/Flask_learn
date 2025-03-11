@@ -3,14 +3,14 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="71c0be86-62c9-4d25-b0a4-a2fbb8c5e989" name="tzy云服务">
-        <fileTransfer accessType="SFTP" host="192.168.0.168" port="22" sshConfigId="f1ad6e1c-3ac8-4af1-8ebc-a09ca2e661f6" sshConfig="root@192.168.0.168:22 password">
+        <fileTransfer accessType="SFTP" host="122.51.217.188" port="22" sshConfigId="5ed2b4c8-513c-43fb-848e-bfc05f9823a9" sshConfig="root@122.51.217.188:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
-      <webServer id="1e78b741-6503-4907-88cf-02baaa4aa0e2" name="2005">
-        <fileTransfer accessType="SFTP" host="192.168.0.168" port="22" sshConfigId="f1ad6e1c-3ac8-4af1-8ebc-a09ca2e661f6" sshConfig="root@192.168.0.168:22 password">
+      <webServer id="2c6042ba-b6d2-4797-a4c5-94b216f3f15b" name="2005">
+        <fileTransfer accessType="SFTP" host="192.168.0.168" port="22" sshConfigId="60fef697-38e4-42f8-b964-6a52b0869519" sshConfig="root@192.168.0.168:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

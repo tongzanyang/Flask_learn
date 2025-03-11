@@ -6,6 +6,7 @@
         <entryData>
           <resourceRoots>
             <path value="file://$PROJECT_DIR$/3.Blueprints_test/auth/static" />
+            <path value="file://$PROJECT_DIR$/my_blog" />
           </resourceRoots>
         </entryData>
       </entry>
