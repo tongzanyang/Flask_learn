@@ -1,0 +1,1 @@
+DEEPSEEK_API_KEY = "sk-6737cc332f01498f8a71f521f8c3be39"  # 替换为你的 DeepSeek API 密钥
