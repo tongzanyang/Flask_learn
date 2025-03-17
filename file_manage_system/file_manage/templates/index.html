@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h3 class="mb-0">
+            <i class="fas fa-folder-open text-primary me-2"></i>文件管理
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="upload-section mb-4">
+            <div class="drop-zone" id="dropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h4>拖拽文件到这里上传</h4>
+                <p class="text-muted">或者点击选择文件</p>
+            </div>
+            <div class="text-center mt-3">
+                <input type="file" id="fileInput" class="d-none" multiple>
+                <button class="btn btn-primary" id="uploadBtn">
+                    <i class="fas fa-upload me-2"></i>选择文件
+                </button>
+            </div>
+            <div class="progress d-none" id="uploadProgress">
+                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="files-section">
+            <h4 class="mb-3">
+                <i class="fas fa-file-alt text-primary me-2"></i>文件列表
+            </h4>
+            {% if files %}
+            <div class="file-list">
+                {% for file in files %}
+                <div class="file-item">
+                    <i class="fas fa-file"></i>
+                    <span class="file-name">{{ file }}</span>
+                    <span class="file-info">{{ get_file_size(file) }} | {{ get_file_mtime(file) }}</span>
+                    <div class="file-actions">
+                        <button class="btn btn-outline-primary btn-sm download-btn" data-filename="{{ file }}" title="下载">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        {% if logged_in %}
+                        <button class="btn btn-outline-info btn-sm rename-btn" data-filename="{{ file }}" title="重命名">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm delete-btn" data-filename="{{ file }}" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">暂无文件</h5>
+                <p class="text-muted mb-0">拖拽文件到上方区域或点击选择文件按钮上传</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- 重命名模态框 -->
+<div class="modal fade" id="renameModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2 text-primary"></i>重命名文件
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="renameForm">
+                    <div class="mb-3">
+                        <label for="new_filename" class="form-label">
+                            <i class="fas fa-file-signature me-2 text-primary"></i>新文件名
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="new_filename" name="new_filename" required>
+                        <input type="hidden" id="old_filename">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="renameFile()">
+                    <i class="fas fa-check me-2"></i>确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    const dropZone = $('#dropZone');
+    const fileInput = $('#fileInput');
+    const uploadBtn = $('#uploadBtn');
+    const progressBar = $('.progress-bar');
+    const progressDiv = $('#uploadProgress');
+
+    // 处理拖拽
+    dropZone.on('dragover dragenter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).closest('.upload-section').addClass('dragover');
+    });
+
+    dropZone.on('dragleave dragend drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).closest('.upload-section').removeClass('dragover');
+    });
+
+    dropZone.on('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const files = e.originalEvent.dataTransfer.files;
+        handleFiles(files);
+    });
+
+    // 点击上传区域
+    dropZone.on('click', function() {
+        fileInput.click();
+    });
+
+    // 上传按钮点击
+    uploadBtn.on('click', function() {
+        fileInput.click();
+    });
+
+    // 文件选择
+    fileInput.on('change', function() {
+        handleFiles(this.files);
+    });
+
+    // 处理文件上传
+    function handleFiles(files) {
+        Array.from(files).forEach(file => {
+            uploadFile(file);
+        });
+    }
+
+    function uploadFile(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        progressDiv.removeClass('d-none');
+        progressBar.css('width', '0%').text('0%');
+
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            xhr: function() {
+                const xhr = new XMLHttpRequest();
+                xhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressBar.css('width', percent + '%').text(percent + '%');
+                    }
+                });
+                return xhr;
+            },
+            success: function(response) {
+                showAlert('success', '文件 ' + file.name + ' 上传成功！');
+                setTimeout(() => location.reload(), 1000);
+            },
+            error: function(xhr) {
+                const response = xhr.responseJSON;
+                showAlert('error', '上传失败：' + (response ? response.message : '未知错误'));
+            },
+            complete: function() {
+                setTimeout(() => {
+                    progressDiv.addClass('d-none');
+                    progressBar.css('width', '0%').text('');
+                }, 1000);
+            }
+        });
+    }
+
+    // 下载文件
+    $(document).on('click', '.download-btn', function() {
+        const filename = $(this).data('filename');
+        window.location.href = `/download/${filename}`;
+    });
+
+    // 重命名文件
+    $(document).on('click', '.rename-btn', function() {
+        const filename = $(this).data('filename');
+        $('#old_filename').val(filename);
+        $('#new_filename').val(filename);
+        new bootstrap.Modal($('#renameModal')).show();
+    });
+
+    // 删除文件
+    $(document).on('click', '.delete-btn', function() {
+        const btn = $(this);
+        const filename = btn.data('filename');
+        
+        if (confirm(`确定要删除文件 "${filename}" 吗？`)) {
+            $.ajax({
+                url: `/delete/${filename}`,
+                type: 'GET',
+                success: function(response) {
+                    showAlert('success', '文件删除成功！');
+                    btn.closest('.file-item').fadeOut(function() {
+                        $(this).remove();
+                        if ($('.file-item').length === 0) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    const response = xhr.responseJSON;
+                    showAlert('error', '删除失败：' + (response ? response.message : '未知错误'));
+                }
+            });
+        }
+    });
+});
+
+function renameFile() {
+    const oldFilename = $('#old_filename').val();
+    const newFilename = $('#new_filename').val();
+    
+    if (!newFilename) {
+        showAlert('error', '新文件名不能为空');
+        return;
+    }
+    
+    $.ajax({
+        url: `/rename/${oldFilename}`,
+        type: 'POST',
+        data: { new_filename: newFilename },
+        success: function(response) {
+            showAlert('success', '文件重命名成功！');
+            setTimeout(() => location.reload(), 1000);
+        },
+        error: function(xhr) {
+            const response = xhr.responseJSON;
+            showAlert('error', '重命名失败：' + (response ? response.message : '未知错误'));
+        }
+    });
+}
+
+function showAlert(type, message) {
+    // 移除所有现有的提示
+    $('.alert').remove();
+    
+    // 创建新的提示
+    const alert = $(`
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `);
+    
+    // 插入提示到页面
+    $('.container').prepend(alert);
+    
+    // 自动关闭
+    setTimeout(() => {
+        alert.alert('close');
+    }, 3000);
+}
+</script>
+{% endblock %}
