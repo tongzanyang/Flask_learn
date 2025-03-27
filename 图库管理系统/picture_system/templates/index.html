@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">欢迎使用图库管理系统</h1>
+            <p class="lead mb-4">这是一个简单而强大的图片管理系统，可以帮助您更好地管理和组织您的图片。</p>
+            
+            {% if not session.get('username') %}
+            <div class="mt-4">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg me-3">登录</a>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg">注册</a>
+            </div>
+            {% else %}
+            <div class="mt-4">
+                <a href="{{ url_for('picture.index') }}" class="btn btn-primary btn-lg">进入我的图库</a>
+            </div>
+            {% endif %}
+            
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <i class="fas fa-images fa-3x text-primary mb-3"></i>
+                            <h3>图片管理</h3>
+                            <p>轻松上传、组织和查看您的图片</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <i class="fas fa-folder fa-3x text-primary mb-3"></i>
+                            <h3>分组管理</h3>
+                            <p>创建分组，更好地组织您的图片</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                            <h3>快速查找</h3>
+                            <p>快速找到您需要的图片</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
