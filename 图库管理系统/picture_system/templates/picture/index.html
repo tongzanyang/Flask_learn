@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+
+{% block title %}图片管理{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- 左侧分组列表 -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">图片分组</h5>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+                        新建分组
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="list-group" id="groupList">
+                        <a href="#" class="list-group-item list-group-item-action active" data-group-id="">
+                            全部图片
+                        </a>
+                        {% for group in groups %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="#" class="flex-grow-1 text-decoration-none text-dark group-item" data-group-id="{{ group.id }}">
+                                {{ group.name }}
+                            </a>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary edit-group" 
+                                        data-id="{{ group.id }}" 
+                                        data-name="{{ group.name }}"
+                                        data-description="{{ group.description }}">
+                                    修改
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger delete-group" data-id="{{ group.id }}">
+                                    删除
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧图片展示区 -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">图片列表</h5>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                            上传图片
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="pictureGrid">
+                        <!-- 图片将通过JavaScript动态加载 -->
+                    </div>
+                    
+                    <!-- 分页控件 -->
+                    <nav class="mt-4">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <!-- 分页将通过JavaScript动态生成 -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 上传图片模态框 -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">上传图片</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm">
+                    <div class="mb-3">
+                        <label class="form-label">选择图片</label>
+                        <input type="file" class="form-control" name="file" accept="image/*" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">选择分组</label>
+                        <select class="form-select" name="group_id">
+                            <option value="">无分组</option>
+                            {% for group in groups %}
+                            <option value="{{ group.id }}">{{ group.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 创建分组模态框 -->
+<div class="modal fade" id="createGroupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">创建分组</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createGroupForm">
+                    <div class="mb-3">
+                        <label class="form-label">分组名称</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">分组描述</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="createGroupBtn">创建</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 图片放大模态框 -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">图片预览</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="previewImage" src="" class="img-fluid" alt="预览图片">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 重命名图片模态框 -->
+<div class="modal fade" id="renameModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">修改</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="renameForm">
+                    <input type="hidden" id="renamePictureId" name="picture_id">
+                    <div class="mb-3">
+                        <label class="form-label">新文件名</label>
+                        <input type="text" class="form-control" id="newFilename" name="new_filename" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="renameBtn">重命名</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改分组模态框 -->
+<div class="modal fade" id="editGroupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">修改分组</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editGroupForm">
+                    <input type="hidden" id="editGroupId" name="group_id">
+                    <div class="mb-3">
+                        <label class="form-label">分组名称</label>
+                        <input type="text" class="form-control" id="editGroupName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">分组描述</label>
+                        <textarea class="form-control" id="editGroupDescription" name="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="editGroupBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPage = 1;
+let currentGroupId = '';
+let totalPages = 1;
+
+// 加载图片列表
+function loadPictures(page = 1) {
+    const url = `/picture/pictures?page=${page}&group_id=${currentGroupId}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const pictureGrid = document.getElementById('pictureGrid');
+            pictureGrid.innerHTML = '';
+            
+            data.pictures.forEach(picture => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4 mb-4';
+                col.innerHTML = `
+                    <div class="card">
+                        <img src="${picture.file_path}" class="card-img-top preview-image" alt="${picture.filename}" 
+                             style="cursor: pointer; height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <p class="card-text">${picture.filename}</p>
+                            <p class="card-text"><small class="text-muted">${picture.upload_time}</small></p>
+                            <div class="btn-group">
+                                <button class="btn btn-primary btn-sm rename-picture" data-id="${picture.id}" data-filename="${picture.filename}">
+                                    重命名
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-picture" data-id="${picture.id}">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                pictureGrid.appendChild(col);
+            });
+            
+            // 更新分页
+            totalPages = data.pages;
+            updatePagination(page);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// 更新分页控件
+function updatePagination(currentPage) {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+    
+    // 上一页
+    const prevLi = document.createElement('li');
+    prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+    prevLi.innerHTML = `
+        <a class="page-link" href="#" data-page="${currentPage - 1}">上一页</a>
+    `;
+    pagination.appendChild(prevLi);
+    
+    // 页码
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        li.innerHTML = `
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+        `;
+        pagination.appendChild(li);
+    }
+    
+    // 下一页
+    const nextLi = document.createElement('li');
+    nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+    nextLi.innerHTML = `
+        <a class="page-link" href="#" data-page="${currentPage + 1}">下一页</a>
+    `;
+    pagination.appendChild(nextLi);
+}
+
+// 事件监听
+document.addEventListener('DOMContentLoaded', () => {
+    // 初始加载
+    loadPictures();
+    
+    // 分组切换
+    document.getElementById('groupList').addEventListener('click', (e) => {
+        e.preventDefault();
+        const groupItem = e.target.closest('.group-item');
+        if (groupItem) {
+            document.querySelectorAll('.group-item').forEach(item => item.classList.remove('active'));
+            groupItem.classList.add('active');
+            currentGroupId = groupItem.dataset.groupId;
+            currentPage = 1;
+            loadPictures();
+        }
+    });
+    
+    // 分页切换
+    document.getElementById('pagination').addEventListener('click', (e) => {
+        e.preventDefault();
+        const pageLink = e.target.closest('.page-link');
+        if (pageLink && !pageLink.parentElement.classList.contains('disabled')) {
+            const page = parseInt(pageLink.dataset.page);
+            currentPage = page;
+            loadPictures(page);
+        }
+    });
+    
+    // 上传图片
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+        const form = document.getElementById('uploadForm');
+        const formData = new FormData(form);
+        
+        fetch('/picture/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+                loadPictures(currentPage);
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    
+    // 创建分组
+    document.getElementById('createGroupBtn').addEventListener('click', () => {
+        const form = document.getElementById('createGroupForm');
+        const formData = new FormData(form);
+        
+        fetch('/picture/group', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    
+    // 删除图片
+    document.getElementById('pictureGrid').addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('.delete-picture');
+        if (deleteBtn) {
+            if (confirm('确定要删除这张图片吗？')) {
+                const pictureId = deleteBtn.dataset.id;
+                fetch(`/picture/picture/${pictureId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        loadPictures(currentPage);
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    });
+    
+    // 图片预览
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('preview-image')) {
+            const previewImage = document.getElementById('previewImage');
+            previewImage.src = e.target.src;
+            new bootstrap.Modal(document.getElementById('imageModal')).show();
+        }
+    });
+    
+    // 重命名图片
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('rename-picture')) {
+            const pictureId = e.target.dataset.id;
+            const currentFilename = e.target.dataset.filename;
+            document.getElementById('renamePictureId').value = pictureId;
+            document.getElementById('newFilename').value = currentFilename;
+            new bootstrap.Modal(document.getElementById('renameModal')).show();
+        }
+    });
+    
+    // 重命名按钮点击事件
+    document.getElementById('renameBtn').addEventListener('click', () => {
+        const form = document.getElementById('renameForm');
+        const formData = new FormData(form);
+        
+        fetch('/picture/rename', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                bootstrap.Modal.getInstance(document.getElementById('renameModal')).hide();
+                loadPictures(currentPage);
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    
+    // 修改分组
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('edit-group')) {
+            const groupId = e.target.dataset.id;
+            const groupName = e.target.dataset.name;
+            const groupDescription = e.target.dataset.description;
+            
+            document.getElementById('editGroupId').value = groupId;
+            document.getElementById('editGroupName').value = groupName;
+            document.getElementById('editGroupDescription').value = groupDescription;
+            
+            new bootstrap.Modal(document.getElementById('editGroupModal')).show();
+        }
+    });
+    
+    // 删除分组
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-group')) {
+            const groupId = e.target.dataset.id;
+            if (confirm('确定要删除这个分组吗？删除后分组下的所有图片将被删除！')) {
+                fetch(`/picture/group/${groupId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    });
+    
+    // 修改分组按钮点击事件
+    document.getElementById('editGroupBtn').addEventListener('click', () => {
+        const form = document.getElementById('editGroupForm');
+        const formData = new FormData(form);
+        
+        fetch('/picture/group', {
+            method: 'PUT',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                bootstrap.Modal.getInstance(document.getElementById('editGroupModal')).hide();
+                location.reload();
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
+{% endblock %} 
