@@ -23,5 +23,12 @@
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/file_manage_system/instance/file_mg.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="picture.db" uuid="eee4a235-0af9-4e64-9995-87a425c48837">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/图库管理系统/instance/picture_mg.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
