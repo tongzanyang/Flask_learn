@@ -1,4 +1,3 @@
-jinja2==3.1.5
 flask==3.1.0
 flask-RESTful==0.3.10
 flask-SQLAlchemy==3.1.1
